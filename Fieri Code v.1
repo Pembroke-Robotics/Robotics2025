@@ -1,0 +1,147 @@
+#include <kipr/wombat.h>
+
+void pause(int i);
+void fr(int dis);
+void bc(int dis);
+void rt();
+void lt();
+void hlt();
+void ls(int k);
+void rs(int k);
+void square();
+
+int main()
+{
+    enable_servos();
+    set_servo_position(0,2047);
+    set_servo_position(1, 1000);
+    lt();
+    pause(1000);
+    fr(2000);
+    rt();
+    pause(1000);
+    /* bc(300);
+    pause(700); */
+    square();
+    pause(1000);
+    set_servo_position(0,1100);
+    fr(4850);
+    pause(700);
+    set_servo_position(0,2047);
+    msleep(1000);
+    set_servo_position(0,0);
+    msleep(1000);
+    fr(450);
+    square(50);
+    pause(1000);
+    set_servo_position(0,1100);
+    msleep(500);
+    fr(2000);
+    set_servo_position(0,2047);
+	msleep(1000);
+    fr(2800);
+    lt();
+    fr(1000);
+    
+    return 0;
+}
+
+
+void pause(int i){
+    motor(0,0);
+    motor(1,0);
+    motor(2,0);
+    motor(3,0);
+    msleep(i);
+}
+
+void fr(int dist){
+    motor(0, 99);
+    motor(1, 100);
+    motor(2, 100);
+    motor(3, 99);
+    msleep(dist);
+    pause(700);
+}
+
+void bc(int dist){
+	motor(0, -100);
+    motor(1, -100);
+    motor(2, -100);
+    motor(3, -100);
+    msleep(dist);
+}
+void rt(){
+    motor(0, -100);
+    motor(1, 100);
+    motor(2, 100);
+    motor(3, -100);
+    msleep(1400);
+}
+void lt(){
+    motor(0, 100);
+    motor(1, -100);
+    motor(2, -100);
+    motor(3, 100);
+    msleep(1500);
+} 
+void hlt(){
+    motor(0, 100);
+    motor(1, -100);
+    motor(2, -100);
+    motor(3, 100);
+    msleep(700);
+    
+}
+void ls(int k){
+    motor(0,100);
+    motor(3,-100);
+    motor(1, -100);
+    motor(2, 100);
+    msleep(k);
+}
+void rs(int k){
+    motor(0,-100);
+    motor(3,100);
+    motor(1, 100);
+    motor(2, -100);
+    msleep(k);
+}
+
+void square()
+{
+    int line = 3000;
+    int speed = 25;
+        while (analog(1) < line){
+            motor(0, -speed/2);
+            motor(1, speed);
+            motor(2, speed);
+            motor(3, -speed/2);
+            msleep(100);
+            motor(0,0);
+            motor(1, 0);
+            motor(2, 0);
+            motor(3,0);
+            msleep(100);
+            }
+            motor(0,0);
+            motor(1, 0);
+            motor(2, 0);
+            motor(3,0);
+            msleep(1000);
+    
+            while (analog(0) < line){
+			motor(0, speed);
+            motor(1, speed/2);
+            motor(2, speed/2);
+            motor(3, speed);
+            msleep(100);
+            motor(0,0);
+            motor(1, 0);
+            motor(2, 0);
+            motor(3,0);
+            msleep(100);
+        
+        }
+
+}
