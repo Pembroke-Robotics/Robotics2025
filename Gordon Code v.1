@@ -1,0 +1,70 @@
+#include <kipr/wombat.h>
+
+int arm = 2;
+int claw = 3;
+int left = 1;
+int right = 0;
+
+int up;
+int down;
+int middle;
+
+
+void forward(int speed, int time);
+void wait();
+void waits(int time);
+
+void armUp(int time);
+void armDown(int time);
+void armWait();
+
+int main()
+{
+    wait();
+    armUp(1000);
+
+
+
+    return 0;
+}
+
+void forward(int speed, int time)
+{
+
+    motor(left, speed);
+    motor(right, speed);
+    msleep(time);
+
+    wait();
+
+}
+
+void wait()
+{
+    motor(left, 0);
+    motor(right, 0);
+    msleep(500);
+}
+void waits(int time)
+{
+    motor(left, 0);
+    motor(right, 0);
+    msleep(time);
+}   
+void armUp(int time)
+{
+    motor(arm, 10);
+    msleep(time);
+    armWait();
+}
+void armDown(int time)
+{
+    motor(arm, -10);
+    msleep(time);
+    armWait();
+}
+void armWait()
+{
+    motor(arm, 0);
+    msleep(100);
+}
