@@ -1,0 +1,83 @@
+#!/usr/bin/python3
+import os, sys
+sys.path.append("/usr/lib")
+import _kipr as k
+print("start")
+
+front_left = 1
+front_right = 0
+back_left = 3
+back_right = 2
+arm_up = 1270
+arm_on_table = 780
+arm_down = 700
+claw_grab = 2000
+claw_open = 1120
+claw = 2
+arm = 0
+left_sensor = 1
+right_sensor = 0
+threshold = 2000
+
+def square_up():
+    if k.analog(left_sensor) <= 2500 and k.analog(right_sensor) >= 2500:
+        while k.analog(left_sensor) < 2000:
+            k.motor(front_left, 100)
+            k.motor(front_right, -50)
+            k.motor(back_left, 100)
+            k.motor(back_right, -50)
+            print("1")  
+           
+
+    elif k.analog(right_sensor) < 2500 and k.analog(left_sensor) >= 2500:
+        while k.analog(right_sensor) < 2500 and k.analog(left_sensor) >= 2500:
+            k.motor(front_left, 100)
+            k.motor(front_right, -100)
+            k.motor(back_left, 100)
+            k.motor(back_right, -100)
+            print("2")
+       
+
+    elif k.analog(left_sensor) < 2500 and k.analog(right_sensor) < 2500:
+        while k.analog(left_sensor) < 2500 and k.analog(right_sensor) < 2500:
+            k.motor(front_left, 100)
+            k.motor(front_right, 100)
+            k.motor(back_left, 100)
+            k.motor(back_right, 100)
+        print("3")
+   
+       
+square_up()
+
+k.msleep(2000)
+k.set_servo_position(arm,arm_up)
+k.set_servo_position(claw,claw_open)
+
+k.motor(front_left, 100)
+k.motor(front_right,100)
+k.motor(back_left, 100)
+k.motor(back_right,100)
+k.msleep(2000)
+
+k.set_servo_position(arm,arm_on_table)
+
+
+k.set_servo_position(claw,claw_grab)
+
+k.set_servo_position(arm, arm_up)
+
+
+k.motor(front_left, -100)
+k.motor(front_right,-100)
+k.motor(back_left, -100)
+k.motor(back_right,-100)
+k.msleep(1000)
+
+k.motor(front_left, -100)
+k.motor(front_right,100)
+k.motor(back_left, 100)
+k.motor(back_right,-100)
+k.msleep(1000)
+
+print("done")
+k.main()
