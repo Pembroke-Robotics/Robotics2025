@@ -1,0 +1,253 @@
+#include <kipr/wombat.h>
+
+int arm = 2;
+int claw = 0;
+int left = 1;
+int right = 0;
+int close =2000;
+int open = 1500;
+
+int up = 300;
+int down = 130;
+int middle = 228;
+
+
+void forward(int speed, int time);
+void wait();
+void waits(int time);
+
+void armUp(int time);
+void armUpT(int ticks);
+void armDown(int time);
+void armDownT(int ticks);
+void armGround();
+void armWait();
+void armClose(int ticks);
+void armOpen(int ticks);
+
+void clear();
+void gmpcMove(int counter);
+void squareUp();
+int main()
+{
+    camera_open();
+    camera_update();
+    clear();
+    wait();
+    squareUp();
+    //armOpen(-close);
+    //armClose(close);
+    set_servo_position(claw, open);
+    wait();
+    //gmpcMove(2500);
+    clear();
+    camera_update();
+    wait();
+    printf("There are %d objects in view. \n", get_object_count(0));
+    printf("X-Coordinate: %d \n", get_object_center_x(0,0));
+    printf("Y-Coordinate: %d \n", get_object_center_y(0,0));
+    wait();
+    //get_object_center_y(0, 0) < 220 || get_object_count(0) == 0 || pastX/3 != get_object_center_x(0,0)/3 || pastY/3 != get_object_center_y(0,0)/3
+    while(!(get_object_center_x(0,0) >300 && get_object_center_x(0,0) <320))
+    {
+        camera_update();
+        if(get_object_center_x(0,0) >350)
+        {
+            motor(left, 60);
+            motor(right, 30);
+        }
+        else if(get_object_center_x(0,0) <250)
+        {
+            motor(left, 30);
+            motor(right, 60);
+        }
+    }
+    while(analog(2) < 2150)
+    {
+        motor(left, 60);
+            motor(right, 60);
+    }
+        
+    /*while(analog(2) < 2400)
+    {
+        camera_update();
+        if(get_object_center_x(0,0) >350)
+        {
+            motor(left, 60);
+            motor(right, 30);
+        }
+        else if(get_object_center_x(0,0) <250)
+        {
+            motor(left, 30);
+            motor(right, 60);
+        }
+        else
+        {
+            motor(left, 60);
+            motor(right, 60);
+            pastX = get_object_center_x(0,0);
+        pastY = get_object_center_y(0,0);
+        }
+        pastX = get_object_center_x(0,0);
+        pastY = get_object_center_y(0,0);
+    }
+    */
+    motor(left, 60);
+    motor(right, 60);
+    msleep(1050);
+        wait();
+    printf("There are %d objects in view. \n", get_object_count(0));
+    printf("X-Coordinate: %d \n", get_object_center_x(0,0));
+    printf("Y-Coordinate: %d \n", get_object_center_y(0,0));
+    /*while(gmpc(arm) > -50)
+    {
+     motor(arm, -5);
+    }*/
+    motor(arm, 0);
+    wait();
+    clear();
+    set_servo_position(claw, close);
+    wait();
+    motor(left, -60);
+    motor(right, -60);
+    msleep(2000);
+    wait();
+    armUp(1000);
+
+
+    
+    
+
+
+
+    return 0;
+}
+
+void forward(int speed, int time)
+{
+
+    motor(left, speed);
+    motor(right, speed);
+    msleep(time);
+
+    wait();
+
+}
+
+void wait()
+{
+    motor(left, 0);
+    motor(right, 0);
+    msleep(500);
+}
+void waits(int time)
+{
+    motor(left, 0);
+    motor(right, 0);
+    msleep(time);
+}   
+void armUp(int time)
+{
+    motor(arm, 10);
+    msleep(time);
+    armWait();
+}
+void armUpT(int ticks)
+{
+    while(gmpc(arm) < ticks)
+    {
+        motor(arm, 2);
+    }
+}
+void armDown(int time)
+{
+    motor(arm, -10);
+    msleep(time);
+    armWait();
+}
+void armDownT(int ticks)
+{
+    while(gmpc(arm) > ticks)
+    {
+        motor(arm, -2);
+    }
+}
+void armGround()
+{
+    if (gmpc(arm) == gmpc(arm))
+    {
+        motor(arm, -5);
+    }
+}
+void armWait()
+{
+    motor(arm, 0);
+    msleep(100);
+}
+void clear()
+{
+    cmpc(0);
+    cmpc(1);
+    cmpc(2);
+    cmpc(3);
+}
+void gmpcMove(int counter)
+{
+  while(gmpc(0) < counter)
+  {
+  while((gmpc(0) == gmpc(1)) && (gmpc(1) <counter))
+  {
+    motor(0, 50);
+    motor(1, 50);
+  }
+  while((gmpc(0) < counter) && (gmpc(0) < gmpc(1)))
+  {
+    motor(0, 50);
+    motor(1, 45);
+  }
+  while((gmpc(1) < counter) && (gmpc(1) < gmpc(0)))
+  {
+    motor(0, 45);
+    motor(1, 50);
+  }
+  }
+motor(0, 0);
+motor(1, 0);
+}
+void armClose(int ticks)
+{
+    while(gmpc(claw) < ticks)
+    {
+        motor(claw, 20);
+    }
+    motor(claw, 0);
+}
+void armOpen(int ticks)
+{
+    while(gmpc(claw) > ticks)
+    {
+        motor(claw, -20);
+    }
+    motor(claw, 0);
+}
+void squareUp()
+{
+    while(analog(0) <3900 || analog(1) < 3900)
+    {
+        if(analog(0)<3900 && analog(1) > 3900)
+        {
+            motor(left, -10);
+            motor(right, 10);
+        }
+        else if(analog(0)>3900 && analog(1) < 3900)
+        {
+            motor(left, 10);
+            motor(right, -10);
+        }
+        else
+        {
+            motor(left, 20);
+            motor(right, 20);
+        }
+    }
+}
